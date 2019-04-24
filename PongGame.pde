@@ -30,37 +30,48 @@ void draw() {
  
   rect(paddleXLeft, paddleYLeft, paddleW, paddleH);
   rect(paddleXRight, paddleYRight, paddleW, paddleH);
-  if (ballRight() > width) {
-    ++score1;
-    dX = -dX;
-  }
   
-  if (ballLeft() < 0) {
-    ++score2;
-    dX = -dX;
+  if (score1 != 7 && score2 != 7) {
+    if (ballRight() > width) {
+      ++score1;
+      dX = -dX;
+    }
+    
+    if (ballLeft() < 0) {
+      ++score2;
+      dX = -dX;
+    }
+   
+    if (collision()) {
+      dX = -dX; // if dX == 2, it becomes -2; if dX is -2, it becomes 2
+    }
+   
+    if (ballBottom() > height) {
+      dY = -dY; // if dY == 2, it becomes -2; if dY is -2, it becomes 2
+    }
+   
+    if (ballTop() < 0) {
+      dY = -dY; // if dY == 2, it becomes -2; if dY is -2, it becomes 2
+    }
+   
+    ballX = ballX + dX;
+    ballY = ballY + dY;
+  }else{
+    scale(1, -1);
+    translate(0, -height);
+    if (score1 == 7){
+      text("Player 1 venceu!", 310, 100);
+    }else{
+      text("Player 2 venceu!", 310, 100);
+    }
+    noLoop();
   }
- 
-  if (collision()) {
-    dX = -dX; // if dX == 2, it becomes -2; if dX is -2, it becomes 2
-  }
- 
-  if (ballBottom() > height) {
-    dY = -dY; // if dY == 2, it becomes -2; if dY is -2, it becomes 2
-  }
- 
-  if (ballTop() < 0) {
-    dY = -dY; // if dY == 2, it becomes -2; if dY is -2, it becomes 2
-  }
- 
-  ballX = ballX + dX;
-  ballY = ballY + dY;
 }
  
 boolean collision() {
   boolean returnValue = false; // assume there is no collision
   if ((ballRight() >= paddleXLeft) && (ballLeft() <= paddleXLeft + paddleW) || (ballLeft() <= paddleXRight) && (ballRight() >= paddleXRight)) {
     if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
-      print("a");
       returnValue = true;
       frameR = frameR + 10;
       frameRate(frameR);
