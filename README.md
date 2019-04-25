@@ -1,3 +1,3 @@
 # PongGame
 
-![Imagem](https://media.giphy.com/media/lDNGok9beljQ4/giphy.gif)
+![Imagem](https://i.gifer.com/J8ND.gif)
