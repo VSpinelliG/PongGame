@@ -19,5 +19,5 @@ Processing é uma linguagem de programação de código aberto e ambiente de des
 > processing.exe
 > ```
 
-### Desenvolvimento
+## Desenvolvimento
 Projeto desenvolvido por [Maurício Vieira](https://github.com/mauriciovr13) e [Vinícius Spinelli](https://github.com/vspinellig) com referências do código do [Dr. Willian Doane](https://drdoane.com/thinking-through-a-basic-pong-game-in-processing/).
