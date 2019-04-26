@@ -3,12 +3,12 @@ float ballY = 200;
 float ballR = 10;
 float dX = random(1, 2);
 float dY = random(1, 2);
-float paddleXLeft;
-float paddleYLeft = 10;
-float paddleXRight;
-float paddleYRight = 10;
-float paddleW = 10;
-float paddleH = 50;
+float paddleXLeft; //ponto localizado no canto inferior direito da barra esquerda
+float paddleYLeft = 10; //ponto localizado no canto inferior direito da barra esquerda
+float paddleXRight; //ponto localizado no canto inferior esquerdo da barra direita
+float paddleYRight = 10; //ponto localizado no canto inferior esquerdo da barra direita
+float paddleW = 10; //
+float paddleH = 50; //altura da barra
 int score1 = 0;
 int score2 = 0;
 int frameR = 80; 
@@ -27,6 +27,14 @@ void draw() {
   scale(1, -1);
   translate(0, -height);
   ellipse(ballX, ballY, 2 * ballR, 2 * ballR);
+  stroke(0);
+  line(350,0,350,400);
+  //line(paddleXRight,0,paddleXRight,400); //linha da esquerda
+  //line(paddleXRight,paddleYRight,paddleXLeft, paddleYLeft); //linha de baixo
+  //line(paddleXRight,paddleYRight+paddleH,paddleXLeft, paddleYLeft+paddleH); //linha de cima
+  //line(paddleW/2, 200, paddleW/2, 250);
+  line(ballX+ballR, 0, ballX+ballR, 400);
+  point(paddleXRight, 0);
  
   rect(paddleXLeft, paddleYLeft, paddleW, paddleH);
   rect(paddleXRight, paddleYRight, paddleW, paddleH);
@@ -46,11 +54,11 @@ void draw() {
       dX = -dX; // if dX == 2, it becomes -2; if dX is -2, it becomes 2
     }
    
-    if (ballBottom() > height) {
+    if (ballTop() > height) {
       dY = -dY; // if dY == 2, it becomes -2; if dY is -2, it becomes 2
     }
    
-    if (ballTop() < 0) {
+    if (ballBottom() < 0) {
       dY = -dY; // if dY == 2, it becomes -2; if dY is -2, it becomes 2
     }
    
@@ -70,11 +78,13 @@ void draw() {
  
 boolean collision() {
   boolean returnValue = false; // assume there is no collision
-  if ((ballRight() >= paddleXLeft) && (ballLeft() <= paddleXLeft + paddleW) || (ballLeft() <= paddleXRight) && (ballRight() >= paddleXRight)) {
+  //if ((ballRight() >= paddleXLeft) && (ballLeft() <= paddleXLeft + paddleW) || (ballLeft() <= paddleXRight) && (ballRight() >= paddleXRight)) {
+  if ((ballLeft() < paddleXLeft+paddleW) || (ballRight() > paddleXRight)) {
+    //if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
     if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
       returnValue = true;
-      frameR = frameR + 10;
-      frameRate(frameR);
+      //frameR = frameR + 10;
+      //frameRate(frameR);
     }
   }
   return returnValue;
@@ -89,20 +99,20 @@ float ballRight() {
 }
  
 float ballTop() {
-  return ballY - ballR;
+  return ballY + ballR;
 }
  
 float ballBottom() {
-  return ballY + ballR;
+  return ballY - ballR;
 }
  
 // based on code from http://processing.org/reference/keyCode.html
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP) {
+    if (keyCode == UP && paddleYRight <= (height-paddleH)) {
       paddleYRight = paddleYRight + paddleH;
       paddleYLeft = paddleYLeft + paddleH;
-    } else if (keyCode == DOWN) {
+    } else if (keyCode == DOWN && paddleYRight >= paddleH) {
       paddleYRight = paddleYRight - paddleH;
       paddleYLeft = paddleYLeft - paddleH;
     }
