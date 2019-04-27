@@ -11,7 +11,7 @@ float paddleW = 10; //
 float paddleH = 50; //altura da barra
 int score1 = 0;
 int score2 = 0;
-int frameR = 80; 
+int frameR = 80;
  
 void setup() {
   size(700, 400);
@@ -22,19 +22,24 @@ void setup() {
  
 void draw() {
   background(100, 100, 100);
-  text(score1, 310, 30);
-  text(score2, 390, 30);
+  textSize(26);
+  text(score1, 250, 30);
+  text(score2, 450, 30);
   scale(1, -1);
   translate(0, -height);
-  ellipse(ballX, ballY, 2 * ballR, 2 * ballR);
-  stroke(0);
+  stroke(255);
   line(350,0,350,400);
+  stroke(0);
+  ellipse(ballX, ballY, 2 * ballR, 2 * ballR);
   //line(paddleXRight,0,paddleXRight,400); //linha da esquerda
   //line(paddleXRight,paddleYRight,paddleXLeft, paddleYLeft); //linha de baixo
   //line(paddleXRight,paddleYRight+paddleH,paddleXLeft, paddleYLeft+paddleH); //linha de cima
   //line(paddleW/2, 200, paddleW/2, 250);
-  line(ballX+ballR, 0, ballX+ballR, 400);
-  point(paddleXRight, 0);
+  //line(ballX+ballR, 0, ballX+ballR, 400);
+  //point(paddleXRight, 0);
+  //point(paddleXLeft, 0);
+  //point(0, paddleYRight);
+  //point(0, paddleYLeft);
  
   rect(paddleXLeft, paddleYLeft, paddleW, paddleH);
   rect(paddleXRight, paddleYRight, paddleW, paddleH);
@@ -68,9 +73,9 @@ void draw() {
     scale(1, -1);
     translate(0, -height);
     if (score1 == 7){
-      text("Player 1 venceu!", 310, 100);
+      text("Player 1 venceu!", 100, 100);
     }else{
-      text("Player 2 venceu!", 310, 100);
+      text("Player 2 venceu!", 450, 100);
     }
     noLoop();
   }
@@ -81,10 +86,10 @@ boolean collision() {
   //if ((ballRight() >= paddleXLeft) && (ballLeft() <= paddleXLeft + paddleW) || (ballLeft() <= paddleXRight) && (ballRight() >= paddleXRight)) {
   if ((ballLeft() < paddleXLeft+paddleW) || (ballRight() > paddleXRight)) {
     //if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
-    if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
+    if ((ballBottom()-5 < paddleYLeft + paddleH) && (ballTop()+5 > paddleYLeft) || (ballBottom()-5 < paddleYRight + paddleH) && (ballTop()+5 > paddleYRight)) {
       returnValue = true;
-      //frameR = frameR + 10;
-      //frameRate(frameR);
+      frameR = frameR + 10;
+      frameRate(frameR);
     }
   }
   return returnValue;
