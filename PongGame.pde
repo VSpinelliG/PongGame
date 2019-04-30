@@ -1,3 +1,9 @@
+import processing.serial.*;
+
+Serial myPort;
+String val;
+int strPort;
+String str;
 float ballX = 350;
 float ballY = 200;
 float ballR = 10;
@@ -12,8 +18,11 @@ float paddleH = 50; //altura da barra
 int score1 = 0;
 int score2 = 0;
 int frameR = 80;
- 
+
 void setup() {
+  //print(Serial.list());
+  String portName = Serial.list()[0];
+  myPort = new Serial(this, portName, 115200);
   size(700, 400);
   paddleXLeft = 5;
   paddleXRight = width - 15;
@@ -79,8 +88,18 @@ void draw() {
     }
     noLoop();
   }
+  
+  if ( myPort.available() > 0) 
+  {  // If data is available,
+    val = myPort.readStringUntil('\n');         // read it and store it in val
+    if ( val != null ) {
+      print(paddleYRight);
+      paddleYRight = int(val);
+      print(paddleYRight);
+    }
+  }
 }
- 
+
 boolean collision() {
   boolean returnValue = false; // assume there is no collision
   //if ((ballRight() >= paddleXLeft) && (ballLeft() <= paddleXLeft + paddleW) || (ballLeft() <= paddleXRight) && (ballRight() >= paddleXRight)) {
@@ -112,14 +131,16 @@ float ballBottom() {
 }
  
 // based on code from http://processing.org/reference/keyCode.html
-void keyPressed() {
+/*void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP && paddleYRight <= (height-paddleH)) {
-      paddleYRight = paddleYRight + paddleH;
+      //paddleYRight = paddleYRight + paddleH;
+      paddleYRight = int(val);
       paddleYLeft = paddleYLeft + paddleH;
     } else if (keyCode == DOWN && paddleYRight >= paddleH) {
-      paddleYRight = paddleYRight - paddleH;
+      //paddleYRight = paddleYRight - paddleH;
+      paddleYRight = int(val);
       paddleYLeft = paddleYLeft - paddleH;
     }
-  }
-}
+  } 
+}*/
