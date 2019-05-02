@@ -20,16 +20,17 @@ int score2 = 0;
 int frameR = 80;
 
 void setup() {
-  //print(Serial.list());
-  String portName = Serial.list()[0];
-  myPort = new Serial(this, portName, 115200);
-  size(700, 400);
+  print(Serial.list());
+  String portName = Serial.list()[1];
+  myPort = new Serial(this, portName, 3600);
+  size(700, 450);
   paddleXLeft = 5;
   paddleXRight = width - 15;
   frameRate(frameR);
 }
  
 void draw() {
+  
   background(100, 100, 100);
   textSize(26);
   text(score1, 250, 30);
@@ -37,7 +38,7 @@ void draw() {
   scale(1, -1);
   translate(0, -height);
   stroke(255);
-  line(350,0,350,400);
+  line(350,0,350,450);
   stroke(0);
   ellipse(ballX, ballY, 2 * ballR, 2 * ballR);
   //line(paddleXRight,0,paddleXRight,400); //linha da esquerda
@@ -47,11 +48,34 @@ void draw() {
   //line(ballX+ballR, 0, ballX+ballR, 400);
   //point(paddleXRight, 0);
   //point(paddleXLeft, 0);
-  //point(0, paddleYRight);
-  //point(0, paddleYLeft);
+  point(0, paddleYRight);
+  point(0, paddleYLeft);
  
   rect(paddleXLeft, paddleYLeft, paddleW, paddleH);
   rect(paddleXRight, paddleYRight, paddleW, paddleH);
+  
+  /*if ( myPort.available() > 0) {  // If data is available,
+    val = myPort.readStringUntil('\n');         // read it and store it in val
+    if ( val != null ) {
+      print(val);
+      //paddleYRight = float(val);
+      paddleYLeft = float(val);
+    }
+  }*/
+  
+  if((myPort != null) && (myPort.available()>0)) {
+    String message = myPort.readStringUntil('\n');
+    print(message);
+    String[] num = split(message, ' ');
+    if(message != null) {
+      int value = int(message.trim());
+      print(value, "\n");
+      paddleYLeft = map(float(num[0]),0,1024,0, height);
+      paddleYRight = map(float(num[1]),0,1024,0, height);
+    }
+  }
+  
+    
   
   if (score1 != 7 && score2 != 7) {
     if (ballRight() > width) {
@@ -88,16 +112,6 @@ void draw() {
     }
     noLoop();
   }
-  
-  if ( myPort.available() > 0) 
-  {  // If data is available,
-    val = myPort.readStringUntil('\n');         // read it and store it in val
-    if ( val != null ) {
-      print(paddleYRight);
-      paddleYRight = int(val);
-      print(paddleYRight);
-    }
-  }
 }
 
 boolean collision() {
@@ -107,7 +121,7 @@ boolean collision() {
     //if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
     if ((ballBottom()-5 < paddleYLeft + paddleH) && (ballTop()+5 > paddleYLeft) || (ballBottom()-5 < paddleYRight + paddleH) && (ballTop()+5 > paddleYRight)) {
       returnValue = true;
-      frameR = frameR + 10;
+      frameR = frameR + 50;
       frameRate(frameR);
     }
   }
@@ -131,16 +145,14 @@ float ballBottom() {
 }
  
 // based on code from http://processing.org/reference/keyCode.html
-/*void keyPressed() {
+void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP && paddleYRight <= (height-paddleH)) {
-      //paddleYRight = paddleYRight + paddleH;
-      paddleYRight = int(val);
-      paddleYLeft = paddleYLeft + paddleH;
+      paddleYRight = paddleYRight + paddleH;
+      //paddleYLeft = paddleYLeft + paddleH;
     } else if (keyCode == DOWN && paddleYRight >= paddleH) {
-      //paddleYRight = paddleYRight - paddleH;
-      paddleYRight = int(val);
-      paddleYLeft = paddleYLeft - paddleH;
+      paddleYRight = paddleYRight - paddleH;
+      //paddleYLeft = paddleYLeft - paddleH;
     }
   } 
-}*/
+}
