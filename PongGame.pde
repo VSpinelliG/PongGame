@@ -145,7 +145,7 @@ float ballBottom() {
 }
  
 // based on code from http://processing.org/reference/keyCode.html
-void keyPressed() {
+/*void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP && paddleYRight <= (height-paddleH)) {
       paddleYRight = paddleYRight + paddleH;
@@ -155,4 +155,4 @@ void keyPressed() {
       //paddleYLeft = paddleYLeft - paddleH;
     }
   } 
-}
+}*/
