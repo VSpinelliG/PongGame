@@ -18,11 +18,12 @@ float paddleH = 50; //altura da barra
 int score1 = 0;
 int score2 = 0;
 int frameR = 80;
+boolean ballColision = true; //se for true acabou de colidir na esquerda
 
 void setup() {
   print(Serial.list());
-  String portName = Serial.list()[1];
-  myPort = new Serial(this, portName, 3600);
+  //String portName = Serial.list()[1];
+  //myPort = new Serial(this, portName, 3600);
   size(700, 450);
   paddleXLeft = 5;
   paddleXRight = width - 15;
@@ -48,8 +49,8 @@ void draw() {
   //line(ballX+ballR, 0, ballX+ballR, 400);
   //point(paddleXRight, 0);
   //point(paddleXLeft, 0);
-  point(0, paddleYRight);
-  point(0, paddleYLeft);
+  //point(0, paddleYRight);
+  //point(0, paddleYLeft);
  
   rect(paddleXLeft, paddleYLeft, paddleW, paddleH);
   rect(paddleXRight, paddleYRight, paddleW, paddleH);
@@ -63,7 +64,7 @@ void draw() {
     }
   }*/
   
-  if((myPort != null) && (myPort.available()>0)) {
+  /*if((myPort != null) && (myPort.available()>0)) {
     String message = myPort.readStringUntil('\n');
     print(message);
     String[] num = split(message, ' ');
@@ -73,19 +74,20 @@ void draw() {
       paddleYLeft = map(float(num[0]),0,1024,0, height);
       paddleYRight = map(float(num[1]),0,1024,0, height);
     }
-  }
+  }*/
   
-    
   
   if (score1 != 7 && score2 != 7) {
     if (ballRight() > width) {
       ++score1;
       dX = -dX;
+      ballColision = false;
     }
     
     if (ballLeft() < 0) {
       ++score2;
       dX = -dX;
+      ballColision = true;
     }
    
     if (collision()) {
@@ -117,9 +119,20 @@ void draw() {
 boolean collision() {
   boolean returnValue = false; // assume there is no collision
   //if ((ballRight() >= paddleXLeft) && (ballLeft() <= paddleXLeft + paddleW) || (ballLeft() <= paddleXRight) && (ballRight() >= paddleXRight)) {
-  if ((ballLeft() < paddleXLeft+paddleW) || (ballRight() > paddleXRight)) {
+  if ((ballRight() > paddleXRight) && ballColision) {
     //if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
-    if ((ballBottom()-5 < paddleYLeft + paddleH) && (ballTop()+5 > paddleYLeft) || (ballBottom()-5 < paddleYRight + paddleH) && (ballTop()+5 > paddleYRight)) {
+    if ((ballBottom()-2 < paddleYLeft + paddleH) && (ballTop()+2 > paddleYLeft) || (ballBottom()-2 < paddleYRight + paddleH) && (ballTop()+2 > paddleYRight)) {
+      ballColision = false;
+      returnValue = true;
+      frameR = frameR + 50;
+      frameRate(frameR);
+    }
+   }
+    
+  if ((ballLeft() < paddleXLeft+paddleW) && !ballColision) {
+  //if ((ballBottom() >= paddleYLeft) && (ballTop() <= paddleYLeft + paddleH) || (ballBottom() >= paddleYRight) && (ballTop() <= paddleYRight + paddleH)) {
+    if ((ballBottom()-2 < paddleYLeft + paddleH) && (ballTop()+2 > paddleYLeft) || (ballBottom()-2 < paddleYRight + paddleH) && (ballTop()+2 > paddleYRight)) {
+      ballColision = true;
       returnValue = true;
       frameR = frameR + 50;
       frameRate(frameR);
@@ -145,14 +158,14 @@ float ballBottom() {
 }
  
 // based on code from http://processing.org/reference/keyCode.html
-/*void keyPressed() {
+void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP && paddleYRight <= (height-paddleH)) {
+    if (keyCode == UP && paddleYRight < (height-paddleH)) {
       paddleYRight = paddleYRight + paddleH;
-      //paddleYLeft = paddleYLeft + paddleH;
-    } else if (keyCode == DOWN && paddleYRight >= paddleH) {
+      paddleYLeft = paddleYLeft + paddleH;
+    } else if (keyCode == DOWN && paddleYRight > paddleH) {
       paddleYRight = paddleYRight - paddleH;
-      //paddleYLeft = paddleYLeft - paddleH;
+      paddleYLeft = paddleYLeft - paddleH;
     }
   } 
-}*/
+}
