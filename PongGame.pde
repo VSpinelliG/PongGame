@@ -84,13 +84,13 @@ void draw() {
       ballColision = false;
     }
     
-    if (ballLeft() < 0) {
+    if (ballLeft() < 0 && !ballColision) {
       ++score2;
       dX = -dX;
       ballColision = true;
     }
    
-    if (collision()) {
+    if (collision() && ballColision) {
       dX = -dX; // if dX == 2, it becomes -2; if dX is -2, it becomes 2
     }
    
