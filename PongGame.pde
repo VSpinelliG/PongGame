@@ -22,7 +22,7 @@ boolean ballColision = true; //Se for true acabou de colidir na esquerda
 
 void setup() {
   print(Serial.list());
-  String portName = Serial.list()[1];
+  String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 3600);
   size(700, 450);
   paddleXLeft = 5;
@@ -67,11 +67,11 @@ void draw() {
   
   if((myPort != null) && (myPort.available()>0)) { //Integrando ao arduino, pegando os valores dos potenciômetros
     String message = myPort.readStringUntil('\n');
-    print(message);
+    //print(message);
     String[] num = split(message, ' ');
     if(message != null) {
-      int value = int(message.trim());
-      print(value, "\n");
+      //int value = int(message.trim());
+      //print(value, "\n");
       paddleYLeft = map(float(num[0]),0,1024,0, height); //map() converte os valores do potênciometro para as coordenadas da tela
       paddleYRight = map(float(num[1]),0,1024,0, height);
     }
